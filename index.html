@@ -6,18 +6,19 @@
     <title>CalmlyUnique | Web3 Community &amp; Content Specialist</title>
     
     <!-- Favicon & Apple Touch Icon -->
-    <link rel="icon" type="image/png" href="./assets/profile-image.png" />
-    <link rel="apple-touch-icon" href="./assets/profile-image.png" />
+    <link rel="icon" type="image/png" href="./assets/profile-image.webp" />
+    <link rel="apple-touch-icon" href="./assets/profile-image.webp" />
+    
+    <!-- 🟢 FIX 2: Added Preconnects to speed up Font & Icon DNS resolution -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 🟢 FIX 2: Removed duplicate Material Symbols link -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&amp;family=Noto+Serif:wght@600;700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+    
+    <!-- Tailwind CDN (We will remove this in the final step!) -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&amp;family=Noto+Serif:wght@600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -138,6 +139,9 @@
             filter: blur(60px);
             z-index: -1;
             opacity: 0.4;
+            /* 🟢 FIX 4: GPU Acceleration for smooth mobile rendering */
+            will-change: transform, opacity;
+            transform: translateZ(0);
         }
 
         .gradient-text {
@@ -180,10 +184,120 @@
         .animate-marquee:hover {
             animation-play-state: paused;
         }
+        /* =========================================
+           PREMIUM PRELOADER ANIMATIONS
+        ========================================= */
+        /* Locks scrolling while loading */
+        body.loading-locked {
+            overflow: hidden !important;
+            height: 100vh;
+        }
+
+        @keyframes slideUpFade {
+            0% { transform: translateY(100%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fillBar {
+            0% { transform: translateX(-101%); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .preloader-text-calmly {
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .preloader-text-unique {
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .preloader-bar {
+            animation: fillBar 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        .preloader-status {
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards, pulseText 1.5s ease-in-out infinite 1s;
+        }
+
+        /* Cinematic Exit Animation */
+        #preloader {
+            transition: opacity 0.8s ease-in-out, visibility 0.8s, transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .preloader-hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.1); /* Zoom-through effect */
+            pointer-events: none;
+        }
+
+        /* =========================================
+           HERO REVEAL ANIMATIONS
+        ========================================= */
+        .hero-element {
+            opacity: 0;
+            transform: translateY(40px); /* Smooth slide up distance */
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .hero-element.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered timings for the one-after-the-other effect */
+        .hero-delay-1 { transition-delay: 0.1s; }
+        .hero-delay-2 { transition-delay: 0.2s; }
+        .hero-delay-3 { transition-delay: 0.3s; }
+        .hero-delay-4 { transition-delay: 0.4s; }
+        .hero-delay-5 { transition-delay: 0.5s; }
+        .hero-delay-6 { transition-delay: 0.6s; }
+
+        /* Animated Flowing Gradient for Marquee */
+        @keyframes bg-flow {
+            0% { background-position: 0% center; }
+            100% { background-position: -200% center; }
+        }
     </style>
 </head>
 
-<body class="bg-background text-on-background font-body-md min-h-screen relative selection:bg-primary-container selection:text-on-primary-container transition-colors duration-500">
+<body id="main-body" class="bg-background text-on-background font-body-md min-h-screen relative selection:bg-primary-container selection:text-on-primary-container transition-colors duration-500 loading-locked">
+    <!-- ========================================= -->
+    <!-- 🔥 PREMIUM ANIMATED PRELOADER 🔥 -->
+    <!-- ========================================= -->
+    <div id="preloader" class="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-background">
+        
+        <!-- Ambient Glowing Orb behind text -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none flex items-center justify-center">
+            <div class="w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] bg-primary-container/20 rounded-full blur-[80px] animate-pulse" style="animation-duration: 3s;"></div>
+        </div>
+        
+        <!-- Main Content Wrapper -->
+        <div class="relative z-10 flex flex-col items-center">
+            
+            <!-- Animated Split Logo Text -->
+            <div class="flex items-center justify-center font-serif text-[42px] sm:text-[56px] leading-none tracking-tight mb-6 overflow-hidden pb-2">
+                <span class="preloader-text-calmly text-on-surface/80 font-semibold inline-block translate-y-[100%] opacity-0 mr-0.5">Calmly</span>
+                <span class="preloader-text-unique text-transparent bg-clip-text bg-gradient-to-r from-[#ba1a1a] via-[#ab2c5d] to-[#f06292] font-black inline-block translate-y-[100%] opacity-0 drop-shadow-sm">Unique</span>
+            </div>
+            
+            <!-- Sleek Gradient Loading Bar -->
+            <div class="w-[180px] sm:w-[220px] h-[2px] bg-outline-variant/30 rounded-full overflow-hidden shadow-inner">
+                <div class="w-full h-full bg-gradient-to-r from-primary to-[#ff8fa3] rounded-full preloader-bar transform -translate-x-[101%] shadow-[0_0_10px_rgba(171,44,93,0.8)]"></div>
+            </div>
+            
+            <!-- Status Text -->
+            <div class="mt-4 font-mono text-[9px] sm:text-[10px] font-bold tracking-[0.3em] text-primary uppercase preloader-status opacity-0">
+                Initializing Web3
+            </div>
+
+        </div>
+    </div>
 
 <!-- Background Wrapper to PREVENT mobile side-scroll -->
 <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
@@ -256,323 +370,367 @@
             <div class="max-w-[1100px] w-full mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12">
                 
 <!-- IMAGE SECTION (Bolder & Ultra-Responsive Mobile View) -->
-                <div class="order-1 lg:order-2 w-full lg:w-5/12 flex justify-center lg:justify-end relative z-20 mt-6 lg:mt-0 mb-4 sm:mb-0">
-                    <!-- Dynamic Background Glow -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/50 to-tertiary-fixed/40 rounded-full blur-[70px] -z-10 animate-pulse" style="animation-duration: 4s;"></div>
-                    
-                    <!-- Tech-Framed Image Wrapper (Heavier shadow & thicker padding on mobile) -->
-                    <div class="relative p-2.5 sm:p-2 rounded-[2.5rem] bg-white/40 border border-white/60 shadow-[0_25px_60px_rgba(240,98,146,0.25)] backdrop-blur-xl group hover:-translate-y-2 transition-transform duration-700 ease-out animate-[float-blob_6s_infinite_ease-in-out]">
-                        
-<!-- Main Image (Loading from local folder) -->
-                        <img alt="CalmlyUnique Profile" class="w-[260px] sm:w-[300px] lg:w-[380px] xl:w-[420px] aspect-[4/5] object-cover rounded-[2rem] sm:rounded-[1.5rem] transition-transform duration-700 group-hover:scale-[1.02]" src="./assets/profile-image.png" />
-                        
-                        <!-- Floating Badge 1: X Followers (Top Left) -->
-                        <div class="absolute -left-3 sm:-left-12 top-8 sm:top-16 glass-card px-3 sm:px-4 py-2 sm:py-3 rounded-[18px] sm:rounded-2xl flex items-center gap-2.5 sm:gap-3 shadow-[0_15px_35px_rgba(0,0,0,0.12)] border border-white/90 animate-[bounce_5s_infinite] z-30 transition-transform hover:scale-105 cursor-default">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black flex items-center justify-center text-white shadow-md">
-                                <!-- Official X (Twitter) SVG Logo -->
-                                <svg viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg>
-                            </div>
-                            <div class="flex flex-col justify-center">
-                                <p class="font-body-md text-[12px] sm:text-[14px] font-extrabold text-on-surface leading-none mb-0.5">5,000+</p>
-                                <p class="font-mono text-[8px] sm:text-[9px] font-bold tracking-widest text-on-surface-variant uppercase leading-none">Followers</p>
-                            </div>
-                        </div>
-
-                        <!-- Floating Badge 2: Web3 Voice (Bottom Right) -->
-                        <div class="absolute -right-2 sm:-right-8 bottom-8 sm:bottom-12 glass-card px-3 sm:px-4 py-2 sm:py-3 rounded-[18px] sm:rounded-2xl flex items-center gap-2.5 sm:gap-3 shadow-[0_15px_35px_rgba(240,98,146,0.2)] border border-white/90 animate-[bounce_6s_infinite] z-30 transition-transform hover:scale-105 cursor-default">
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-primary to-[#ff8fa3] flex items-center justify-center text-white shadow-[0_0_15px_rgba(171,44,93,0.4)]">
-                                <span class="material-symbols-outlined text-[16px] sm:text-[20px]">campaign</span>
-                            </div>
-                            <div class="flex flex-col justify-center">
-                                <p class="font-body-md text-[12px] sm:text-[14px] font-extrabold text-primary leading-none mb-0.5">Top Voice</p>
-                                <p class="font-mono text-[8px] sm:text-[9px] font-bold tracking-widest text-on-surface-variant uppercase leading-none">Web3 Spaces</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- TEXT CONTENT -->
-                <div class="order-2 lg:order-1 w-full lg:w-7/12 flex flex-col items-center text-center lg:items-start lg:text-left z-30">
-                    
-<!-- Top Tagline (Human + Premium Web3 Vibe) -->
-                    <div class="flex items-center justify-center lg:justify-start mb-4 w-full">
-                        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/50 border border-primary/20 shadow-[0_4px_15px_rgba(171,44,93,0.08)] backdrop-blur-md hover:bg-white/80 transition-colors duration-300 cursor-default">
-                            <span class="text-[14px] sm:text-[16px] leading-none transform origin-bottom-right hover:rotate-12 transition-transform duration-300">👋</span>
-                            <span class="font-mono text-[9px] sm:text-[10px] font-extrabold tracking-[0.25em] text-primary uppercase pt-0.5">
-                                Hello, I'm
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <!-- Split Name (Scaled down) -->
-                    <h1 class="flex flex-col font-serif leading-[0.85] tracking-tighter mb-4 w-full">
-                        <span class="text-[48px] sm:text-[65px] lg:text-[75px] font-semibold text-on-surface/70 -ml-1">
-                            Calmly
-                        </span>
-                        <span class="text-[58px] sm:text-[80px] lg:text-[95px] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ba1a1a] via-[#ab2c5d] to-[#f06292] drop-shadow-md pb-2 -ml-1">
-                            Unique
-                        </span>
-                    </h1>
-<!-- Two-Line Clean Subheading -->
-                    <div class="mb-8 w-full max-w-[480px] text-center lg:text-left text-[14px] sm:text-[16px] leading-[1.7] text-on-surface-variant font-medium">
-                        
-                        <!-- Line 1: Static with Glowing Underline -->
-                        <div class="block w-full mb-1">
-                            Turning audiences into 
-                            <span class="relative inline-block font-bold text-on-surface px-1">
-                                decentralized communities
-                                <span class="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary via-[#ff8fa3] to-primary rounded-full shadow-[0_2px_8px_rgba(240,98,146,0.6)]"></span>
-                            </span>
-                        </div>
-                        
-                        <!-- Line 2: Perfectly Aligned Typewriter -->
-                        <div class="flex flex-row items-baseline justify-center lg:justify-start w-full">
-                            <span class="mr-1.5">through</span> 
-                            <span class="font-mono text-[13px] sm:text-[15px] text-primary font-bold uppercase tracking-widest">
-                                <span id="typewriter-text"></span><span class="inline-block w-[2.5px] h-[1em] bg-primary ml-[2px] align-text-bottom animate-[pulse_1s_infinite]"></span>
-                            </span>
-                        </div>
-
-                    </div>
-
-                    <!-- Skill Tags (Scaled down padding & text) -->
-                    <div class="flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2 mb-8 max-w-[450px]">
-                        <span class="px-3 py-1 rounded-full bg-white/60 border border-primary/20 text-on-surface-variant text-[8px] sm:text-[9px] font-bold tracking-widest uppercase shadow-sm hover:border-primary/50 hover:text-primary transition-colors cursor-default">Ambassador</span>
-                        <span class="px-3 py-1 rounded-full bg-white/60 border border-primary/20 text-on-surface-variant text-[8px] sm:text-[9px] font-bold tracking-widest uppercase shadow-sm hover:border-primary/50 hover:text-primary transition-colors cursor-default">Space Host</span>
-                        <span class="px-3 py-1 rounded-full bg-white/60 border border-primary/20 text-on-surface-variant text-[8px] sm:text-[9px] font-bold tracking-widest uppercase shadow-sm hover:border-primary/50 hover:text-primary transition-colors cursor-default">Social Media Manager</span>
-                    </div>
-                    
-<!-- Action Buttons (Sleek, Tactile & Animated) -->
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4 w-full mt-2">
-                        
-                        <!-- Sleek "Soft-Pop" Primary Button -->
-                        <a href="#contact" class="w-full sm:w-auto group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-primary to-[#ff8fa3] text-white font-label-sm text-[11px] sm:text-[12px] font-bold tracking-widest uppercase transition-all duration-400 ease-out shadow-[0_8px_20px_rgba(171,44,93,0.25),inset_0_1.5px_1px_rgba(255,255,255,0.4)] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(171,44,93,0.4),inset_0_1.5px_1px_rgba(255,255,255,0.6)] active:translate-y-0.5 active:shadow-[0_4px_10px_rgba(171,44,93,0.3),inset_0_2px_4px_rgba(0,0,0,0.15)] border border-primary/20">
-                            
-                            <!-- Diagonal Light Sweep (Animated on Hover) -->
-                            <span class="absolute inset-0 rounded-full pointer-events-none">
-                                <span class="absolute top-0 left-[-150%] w-[150%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 transition-all duration-700 ease-out group-hover:left-[100%]"></span>
-                            </span>
-                            
-                            <!-- Button Content -->
-                            <span class="relative drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">
-                                Work With Me
-                            </span>
-                            
-                            <!-- Animated Icon -->
-                            <span class="material-symbols-outlined text-[16px] relative transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
-                                handshake
-                            </span>
-                        </a>
-
-                        <!-- Ultra-Glass Secondary Button -->
-                        <a href="#services" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 text-on-surface font-label-sm text-[11px] sm:text-[12px] font-bold tracking-widest uppercase transition-all duration-400 ease-out shadow-[0_4px_15px_rgba(0,0,0,0.02)] hover:bg-white/80 hover:text-primary hover:-translate-y-1 hover:shadow-[0_12px_25px_rgba(240,98,146,0.15)] hover:border-white active:translate-y-0.5 group">
-                            
-                            <span>Explore My Work</span>
-                            
-                            <!-- Shooting Arrow Icon -->
-                            <span class="material-symbols-outlined text-[16px] text-primary/70 group-hover:text-primary transition-all duration-300 group-hover:-translate-y-[2px] group-hover:translate-x-[2px]">
-                                arrow_outward
-                            </span>
-                        </a>
-
-                    </div>
-                </div>
-
+<div class="hero-element hero-delay-1 order-1 lg:order-2 w-full lg:w-5/12 flex justify-center lg:justify-end relative z-20 mt-6 lg:mt-0 mb-4 sm:mb-0">
+    <!-- Dynamic Background Glow -->
+    <div class="absolute inset-0 bg-gradient-to-tr from-primary/50 to-tertiary-fixed/40 rounded-full blur-[70px] -z-10 animate-pulse" style="animation-duration: 4s;"></div>
+    
+    <!-- Tech-Framed Image Wrapper -->
+    <div class="relative p-2.5 sm:p-2 rounded-[2.5rem] bg-white/40 border border-white/60 shadow-[0_25px_60px_rgba(240,98,146,0.25)] backdrop-blur-xl group hover:-translate-y-2 transition-transform duration-700 ease-out animate-[float-blob_6s_infinite_ease-in-out]">
+        
+        <!-- Main Image -->
+        <img alt="CalmlyUnique Profile" class="w-[260px] sm:w-[300px] lg:w-[380px] xl:w-[420px] aspect-[4/5] object-cover rounded-[2rem] sm:rounded-[1.5rem] transition-transform duration-700 group-hover:scale-[1.02]" src="./assets/profile-image.webp" fetchpriority="high" />
+        
+        <!-- Floating Badge 1: X Followers -->
+        <div class="absolute -left-3 sm:-left-12 top-8 sm:top-16 glass-card px-3 sm:px-4 py-2 sm:py-3 rounded-[18px] sm:rounded-2xl flex items-center gap-2.5 sm:gap-3 shadow-[0_15px_35px_rgba(0,0,0,0.12)] border border-white/90 animate-[bounce_5s_infinite] z-30 transition-transform hover:scale-105 cursor-default">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black flex items-center justify-center text-white shadow-md">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg>
             </div>
-        </section>
-<!-- ANIMATED DIVISION LINE -->
-        <div class="relative w-full h-12 sm:h-14 bg-gradient-to-r from-primary to-[#ff8fa3] overflow-hidden flex items-center z-30 shadow-[0_10px_30px_rgba(171,44,93,0.2)] border-y border-white/40">
-            <div class="animate-marquee font-mono text-[10px] sm:text-[12px] font-bold tracking-[0.2em] text-white uppercase flex items-center">
-                <!-- Group 1 -->
-                <span class="mx-4 sm:mx-8">✦</span> SPACE HOST
-                <span class="mx-4 sm:mx-8">✦</span> CONTENT SPECIALIST
-                <span class="mx-4 sm:mx-8">✦</span> WEB3 COMMUNITY
-                <span class="mx-4 sm:mx-8">✦</span> SOCIAL MEDIA MANAGER
-                <span class="mx-4 sm:mx-8">✦</span> AI VISUALS
-                <span class="mx-4 sm:mx-8">✦</span> CREATOR GROWTH
-                <!-- Group 2 (Duplicated for seamless loop) -->
-                <span class="mx-4 sm:mx-8">✦</span> SPACE HOST
-                <span class="mx-4 sm:mx-8">✦</span> CONTENT SPECIALIST
-                <span class="mx-4 sm:mx-8">✦</span> WEB3 COMMUNITY
-                <span class="mx-4 sm:mx-8">✦</span> SOCIAL MEDIA MANAGER
-                <span class="mx-4 sm:mx-8">✦</span> AI VISUALS
-                <span class="mx-4 sm:mx-8">✦</span> CREATOR GROWTH
+            <div class="flex flex-col justify-center">
+                <p class="font-body-md text-[12px] sm:text-[14px] font-extrabold text-on-surface leading-none mb-0.5">5,000+</p>
+                <p class="font-mono text-[8px] sm:text-[9px] font-bold tracking-widest text-on-surface-variant uppercase leading-none">Followers</p>
             </div>
         </div>
 
-        <!-- NEW ABOUT SECTION (Image Left, Text Right, Bold Typography) -->
-        <section id="about" class="relative w-full bg-white pt-24 pb-28 px-6 md:px-12 z-20 overflow-hidden">
-            
-            <!-- Subtle White-on-White Grid Background -->
-            <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <!-- Floating Badge 2: Web3 Voice -->
+        <div class="absolute -right-2 sm:-right-8 bottom-8 sm:bottom-12 glass-card px-3 sm:px-4 py-2 sm:py-3 rounded-[18px] sm:rounded-2xl flex items-center gap-2.5 sm:gap-3 shadow-[0_15px_35px_rgba(240,98,146,0.2)] border border-white/90 animate-[bounce_6s_infinite] z-30 transition-transform hover:scale-105 cursor-default">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-primary to-[#ff8fa3] flex items-center justify-center text-white shadow-[0_0_15px_rgba(171,44,93,0.4)]">
+                <span class="material-symbols-outlined text-[16px] sm:text-[20px]">campaign</span>
+            </div>
+            <div class="flex flex-col justify-center">
+                <p class="font-body-md text-[12px] sm:text-[14px] font-extrabold text-primary leading-none mb-0.5">Top Voice</p>
+                <p class="font-mono text-[8px] sm:text-[9px] font-bold tracking-widest text-on-surface-variant uppercase leading-none">Web3 Spaces</p>
+            </div>
+        </div>
 
-            <div class="max-w-[1150px] mx-auto relative flex flex-col lg:flex-row items-center gap-16 lg:gap-20">
-                
-                <!-- LEFT SIDE: Animated Local Image -->
-                <div class="w-full sm:w-[80%] lg:w-1/2 relative group z-10 flex justify-center lg:justify-start">
-                    
-                    <!-- Pulsing Glow Behind Image -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/30 to-[#ffb1c5]/40 rounded-[2.5rem] blur-[50px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 animate-pulse" style="animation-duration: 5s;"></div>
-                    
-                    <!-- Image Wrapper with subtle tilt -->
-                    <div class="relative w-full max-w-[420px] aspect-[4/5] rounded-[2rem] bg-white p-2.5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-outline-variant/30 transform -rotate-2 group-hover:rotate-0 transition-transform duration-700 ease-out">
-                        <!-- Local Image loaded from assets folder -->
-                        <img src="./assets/about-image.jpg" alt="CalmlyUnique Web3 Presence" class="w-full h-full object-cover rounded-[1.5rem] shadow-inner" />
-                        
-                        <!-- Cool Spinning Circular Badge -->
-                        <div class="absolute -bottom-6 -right-6 sm:-bottom-8 sm:-right-8 w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-full shadow-[0_10px_30px_rgba(240,98,146,0.2)] border border-white flex items-center justify-center z-20 group-hover:scale-110 transition-transform duration-500">
-                            <!-- Inner Icon -->
-                            <div class="absolute w-10 h-10 sm:w-12 sm:h-12 bg-primary-container rounded-full flex items-center justify-center text-primary shadow-inner">
-                                <span class="material-symbols-outlined text-[20px] sm:text-[24px]">verified</span>
-                            </div>
-                            <!-- SVG Spinning Text -->
-                            <svg viewBox="0 0 100 100" class="w-full h-full animate-[spin_10s_linear_infinite]">
-                                <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none"></path>
-                                <text font-size="10.5" font-family="monospace" font-weight="bold" fill="#ab2c5d" letter-spacing="2">
-                                    <textPath href="#textPath" startOffset="0%">• WEB3 COMMUNITY • DIGITAL PRESENCE</textPath>
-                                </text>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
+    </div>
+</div>
 
-                <!-- RIGHT SIDE: Typography & Copy -->
-                <div class="w-full lg:w-1/2 text-center lg:text-left z-10 flex flex-col items-center lg:items-start">
-                    
-                    <!-- Pre-headline -->
-                    <div class="inline-flex items-center gap-2 font-mono text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-5">
-                        <span class="w-6 h-[1.5px] bg-primary/40 hidden sm:block"></span>
-                        BEHIND THE AVATAR
-                    </div>
-                    
-                    <!-- Massive Headline -->
-                    <h2 class="font-serif text-[38px] sm:text-[46px] lg:text-[52px] font-bold text-on-surface leading-[1.1] tracking-tight mb-8">
-                        I help real people build <br class="hidden lg:block" />
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">real progress.</span>
-                    </h2>
+<!-- TEXT CONTENT -->
+<div class="order-2 lg:order-1 w-full lg:w-7/12 flex flex-col items-center text-center lg:items-start lg:text-left z-30">
+    
+    <!-- Top Tagline (Human + Premium Web3 Vibe) -->
+    <div class="hero-element hero-delay-2 flex items-center justify-center lg:justify-start mb-4 w-full">
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/50 border border-primary/20 shadow-[0_4px_15px_rgba(171,44,93,0.08)] backdrop-blur-md hover:bg-white/80 transition-colors duration-300 cursor-default">
+            <span class="text-[14px] sm:text-[16px] leading-none transform origin-bottom-right hover:rotate-12 transition-transform duration-300">👋</span>
+            <span class="font-mono text-[9px] sm:text-[10px] font-extrabold tracking-[0.25em] text-primary uppercase pt-0.5">
+                Hello, I'm
+            </span>
+        </div>
+    </div>
+    
+    <!-- Split Name -->
+    <h1 class="hero-element hero-delay-3 flex flex-col font-serif leading-[0.85] tracking-tighter mb-4 w-full">
+        <span class="text-[48px] sm:text-[65px] lg:text-[75px] font-semibold text-on-surface/70 -ml-1">
+            Calmly
+        </span>
+        <span class="text-[58px] sm:text-[80px] lg:text-[95px] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ba1a1a] via-[#ab2c5d] to-[#f06292] drop-shadow-md pb-2 -ml-1">
+            Unique
+        </span>
+    </h1>
 
-                    <!-- Body Copy with Bold Highlights -->
-                    <div class="space-y-6 font-body-lg text-[15.5px] sm:text-[17px] leading-[1.8] text-on-surface-variant max-w-[550px]">
-                        <p>
-                            Known for my warm, motivational style and community-focused energy, my goal is to curate thoughts and build 
-                            <strong class="font-extrabold text-primary bg-primary/5 px-1 rounded-sm">lasting influence in Web3.</strong>
-                        </p>
-                        <p>
-                            I host insightful conversations, create engaging content, and share actionable advice on 
-                            <strong class="font-extrabold text-primary bg-primary/5 px-1 rounded-sm">creator growth and discipline.</strong>
-                        </p>
-                        <p>
-                            Whether we’re experimenting with AI-powered visuals or reminding each other to lock in on big goals, my mission is simple: turning audiences into genuine communities—one authentic connection at a time.
-                        </p>
-                    </div>
+    <!-- Two-Line Clean Subheading -->
+    <div class="hero-element hero-delay-4 mb-8 w-full max-w-[480px] text-center lg:text-left text-[14px] sm:text-[16px] leading-[1.7] text-on-surface-variant font-medium">
+        
+        <div class="block w-full mb-1">
+            Turning audiences into 
+            <span class="relative inline-block font-bold text-on-surface px-1">
+                decentralized communities
+                <span class="absolute bottom-0 left-0 w-full h-[3px] bg-gradient-to-r from-primary via-[#ff8fa3] to-primary rounded-full shadow-[0_2px_8px_rgba(240,98,146,0.6)]"></span>
+            </span>
+        </div>
+        
+        <div class="flex flex-row items-baseline justify-center lg:justify-start w-full">
+            <span class="mr-1.5">through</span> 
+            <span class="font-mono text-[13px] sm:text-[15px] text-primary font-bold uppercase tracking-widest">
+                <span id="typewriter-text"></span><span class="inline-block w-[2.5px] h-[1em] bg-primary ml-[2px] align-text-bottom animate-[pulse_1s_infinite]"></span>
+            </span>
+        </div>
 
-                    <!-- Mini Skill Checkmarks -->
-                    <div class="mt-10 flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3">
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
-                            <span class="font-mono text-[11px] font-bold tracking-widest text-on-surface uppercase">Live Audio Hosting</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
-                            <span class="font-mono text-[11px] font-bold tracking-widest text-on-surface uppercase">AI Visuals</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
-                            <span class="font-mono text-[11px] font-bold tracking-widest text-on-surface uppercase">Community SMM</span>
-                        </div>
-                    </div>
+    </div>
 
-                </div>
+    <!-- Skill Tags -->
+    <div class="hero-element hero-delay-5 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2 mb-8 max-w-[450px]">
+        <span class="px-3 py-1 rounded-full bg-white/60 border border-primary/20 text-on-surface-variant text-[8px] sm:text-[9px] font-bold tracking-widest uppercase shadow-sm hover:border-primary/50 hover:text-primary transition-colors cursor-default">Ambassador</span>
+        <span class="px-3 py-1 rounded-full bg-white/60 border border-primary/20 text-on-surface-variant text-[8px] sm:text-[9px] font-bold tracking-widest uppercase shadow-sm hover:border-primary/50 hover:text-primary transition-colors cursor-default">Space Host</span>
+        <span class="px-3 py-1 rounded-full bg-white/60 border border-primary/20 text-on-surface-variant text-[8px] sm:text-[9px] font-bold tracking-widest uppercase shadow-sm hover:border-primary/50 hover:text-primary transition-colors cursor-default">Social Media Manager</span>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="hero-element hero-delay-6 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4 w-full mt-2">
+        
+        <a href="#contact" class="w-full sm:w-auto group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-primary to-[#ff8fa3] text-white font-label-sm text-[11px] sm:text-[12px] font-bold tracking-widest uppercase transition-all duration-400 ease-out shadow-[0_8px_20px_rgba(171,44,93,0.25),inset_0_1.5px_1px_rgba(255,255,255,0.4)] hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(171,44,93,0.4),inset_0_1.5px_1px_rgba(255,255,255,0.6)] active:translate-y-0.5 active:shadow-[0_4px_10px_rgba(171,44,93,0.3),inset_0_2px_4px_rgba(0,0,0,0.15)] border border-primary/20">
+            <span class="absolute inset-0 rounded-full pointer-events-none">
+                <span class="absolute top-0 left-[-150%] w-[150%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 transition-all duration-700 ease-out group-hover:left-[100%]"></span>
+            </span>
+            <span class="relative drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">Work With Me</span>
+            <span class="material-symbols-outlined text-[16px] relative transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">handshake</span>
+        </a>
+
+        <a href="#services" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-white/40 backdrop-blur-md border border-white/60 text-on-surface font-label-sm text-[11px] sm:text-[12px] font-bold tracking-widest uppercase transition-all duration-400 ease-out shadow-[0_4px_15px_rgba(0,0,0,0.02)] hover:bg-white/80 hover:text-primary hover:-translate-y-1 hover:shadow-[0_12px_25px_rgba(240,98,146,0.15)] hover:border-white active:translate-y-0.5 group">
+            <span>Explore My Work</span>
+            <span class="material-symbols-outlined text-[16px] text-primary/70 group-hover:text-primary transition-all duration-300 group-hover:-translate-y-[2px] group-hover:translate-x-[2px]">arrow_outward</span>
+        </a>
+
+    </div>
+</div>
 
             </div>
-
-<!-- THE TRACK RECORD: 4 Animated Stat Cards -->
-            <div class="max-w-[1200px] mx-auto mt-20 lg:mt-28 relative z-10 w-full">
-                
-                <!-- Section Title -->
-                <div class="text-center mb-10">
-                    <div class="inline-flex items-center gap-2 font-mono text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-3">
-                        <span class="w-6 h-[1.5px] bg-primary/40"></span>
-                        PROVEN IMPACT
-                        <span class="w-6 h-[1.5px] bg-primary/40"></span>
-                    </div>
-                    <h3 class="font-serif text-[24px] sm:text-[32px] font-bold text-on-surface">By the Numbers</h3>
-                </div>
-
-                <!-- Cards Grid (4 columns on Desktop, 2 on Mobile) -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                    
-                    <!-- Card 1: X Monetization -->
-                    <div class="reveal-card opacity-0 translate-y-8 transition-all duration-700 ease-out bg-surface/40 border border-outline-variant/30 rounded-3xl p-5 sm:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_40px_rgba(240,98,146,0.1)] hover:-translate-y-1.5 transition-all relative overflow-hidden group">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary-container/30 rounded-full blur-2xl group-hover:bg-primary-container/60 transition-colors duration-500"></div>
-                        <div class="mb-4 relative z-10">
-                            <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-primary">
-                                <span class="material-symbols-outlined text-[20px]">payments</span>
-                            </div>
-                        </div>
-                        <div class="mb-1 relative z-10 flex items-baseline">
-                            <span class="font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">$</span>
-                            <span class="count-up font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]" data-target="5800">0</span>
-                            <span class="font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">+</span>
-                        </div>
-                        <h4 class="font-bold text-[12px] sm:text-[14px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">X Creator Payout</h4>
-                        <p class="font-body-md text-[11px] sm:text-[13px] text-on-surface-variant leading-snug relative z-10">Generated in a single payout, proving sustainable content monetization.</p>
-                    </div>
-
-                    <!-- Card 2: Community Growth -->
-                    <div class="reveal-card opacity-0 translate-y-8 transition-all duration-700 ease-out delay-100 bg-surface/40 border border-outline-variant/30 rounded-3xl p-5 sm:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_40px_rgba(240,98,146,0.1)] hover:-translate-y-1.5 transition-all relative overflow-hidden group">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-tertiary-fixed/40 rounded-full blur-2xl group-hover:bg-tertiary-fixed/70 transition-colors duration-500"></div>
-                        <div class="mb-4 relative z-10">
-                            <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-primary">
-                                <span class="material-symbols-outlined text-[20px]">group_add</span>
-                            </div>
-                        </div>
-                        <div class="mb-1 relative z-10 flex items-baseline">
-                            <span class="count-up font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]" data-target="5600">0</span>
-                            <span class="font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">+</span>
-                        </div>
-                        <h4 class="font-bold text-[12px] sm:text-[14px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">Loyal Followers</h4>
-                        <p class="font-body-md text-[11px] sm:text-[13px] text-on-surface-variant leading-snug relative z-10">Engaged Web3 community with top posts crossing 10K+ high-interaction views.</p>
-                    </div>
-
-                    <!-- Card 3: Content Strategy -->
-                    <div class="reveal-card opacity-0 translate-y-8 transition-all duration-700 ease-out delay-200 bg-surface/40 border border-outline-variant/30 rounded-3xl p-5 sm:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_40px_rgba(240,98,146,0.1)] hover:-translate-y-1.5 transition-all relative overflow-hidden group">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary-fixed/60 rounded-full blur-2xl group-hover:bg-primary-fixed/90 transition-colors duration-500"></div>
-                        <div class="mb-4 relative z-10">
-                            <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-primary">
-                                <span class="material-symbols-outlined text-[20px]">trending_up</span>
-                            </div>
-                        </div>
-                        <div class="mb-1 relative z-10 flex items-baseline">
-                            <span class="count-up font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]" data-target="15">0</span>
-                            <span class="font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">%</span>
-                        </div>
-                        <h4 class="font-bold text-[12px] sm:text-[14px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">Avg Engagement Rate</h4>
-                        <p class="font-body-md text-[11px] sm:text-[13px] text-on-surface-variant leading-snug relative z-10">Consistent 8-15% ER using strategic storytelling and AI visual tools.</p>
-                    </div>
-
-                    <!-- Card 4: Execution -->
-                    <div class="reveal-card opacity-0 translate-y-8 transition-all duration-700 ease-out delay-300 bg-surface/40 border border-outline-variant/30 rounded-3xl p-5 sm:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_15px_40px_rgba(240,98,146,0.1)] hover:-translate-y-1.5 transition-all relative overflow-hidden group">
-                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-[#ffb1c5]/40 rounded-full blur-2xl group-hover:bg-[#ffb1c5]/70 transition-colors duration-500"></div>
-                        <div class="mb-4 relative z-10">
-                            <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-primary">
-                                <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
-                            </div>
-                        </div>
-                        <div class="mb-1 relative z-10 flex items-baseline">
-                            <span class="font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">$</span>
-                            <span class="count-up font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]" data-target="6500">0</span>
-                            <span class="font-serif text-[28px] sm:text-[36px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">+</span>
-                        </div>
-                        <h4 class="font-bold text-[12px] sm:text-[14px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">On-Chain Wins</h4>
-                        <p class="font-body-md text-[11px] sm:text-[13px] text-on-surface-variant leading-snug relative z-10">Combined crypto earnings in a single month during a 9-5 discipline lock-in.</p>
-                    </div>
-
-                </div>
-            </div>
-
         </section>
+<!-- ANIMATED DIVISION LINE (Upgraded & Dynamic) -->
+        <div class="relative w-full h-14 sm:h-16 overflow-hidden flex items-center z-30 group shadow-[0_15px_40px_rgba(171,44,93,0.3)] border-y border-white/50">
+            
+            <!-- Flowing Liquid Background -->
+            <div class="absolute inset-0 bg-gradient-to-r from-primary via-[#ffb1c5] to-primary bg-[length:200%_auto] animate-[bg-flow_4s_linear_infinite] group-hover:animate-[bg-flow_8s_linear_infinite] transition-all duration-700"></div>
+            
+            <!-- Subtle Glass Overlay -->
+            <div class="absolute inset-0 bg-black/10 backdrop-blur-[2px]"></div>
+
+            <!-- Marquee Content -->
+            <div class="animate-marquee group-hover:[animation-play-state:paused] flex items-center whitespace-nowrap font-mono text-[11px] sm:text-[13px] font-black tracking-[0.25em] uppercase z-10 relative">
+                
+                <!-- Group 1 -->
+                <div class="flex items-center">
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Space Host</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Content Specialist</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Web3 Community</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Social Media Manager</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">AI Visuals</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Creator Growth</span>
+                </div>
+
+                <!-- Group 2 (Duplicated for seamless loop) -->
+                <div class="flex items-center">
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Space Host</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Content Specialist</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Web3 Community</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Social Media Manager</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">AI Visuals</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Creator Growth</span>
+                </div>
+                
+                <!-- Group 3 (Extra duplication to guarantee no blank spaces on 4K/Ultrawide screens) -->
+                <div class="flex items-center">
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Space Host</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Content Specialist</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Web3 Community</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Social Media Manager</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">AI Visuals</span>
+
+                    <span class="mx-6 sm:mx-10 inline-block animate-[spin_4s_linear_infinite] text-white/90 drop-shadow-md">✦</span>
+                    <span class="text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.9)] hover:text-white hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)] hover:scale-110 hover:-translate-y-0.5 transition-all duration-300 cursor-default">Creator Growth</span>
+                </div>
+
+            </div>
+        </div>
+
+<!-- NEW ABOUT SECTION (Ultra-Premium Glassmorphism & Scroll Reveals) -->
+<section id="about" class="relative w-full bg-white pt-24 pb-32 px-6 md:px-12 z-20 overflow-hidden">
+    
+    <!-- Deep Ambient Gradients & Grid -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-primary-container/10 to-transparent rounded-full blur-[100px] pointer-events-none -z-10"></div>
+    <div class="absolute bottom-0 left-0 w-[800px] h-[600px] bg-gradient-to-tr from-tertiary-fixed/20 to-transparent rounded-full blur-[120px] pointer-events-none -z-10"></div>
+
+    <div class="max-w-[1150px] mx-auto relative flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+        
+        <!-- LEFT SIDE: Animated Local Image (Now with a Scroll Reveal) -->
+        <div class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out w-full sm:w-[80%] lg:w-1/2 relative group z-10 flex justify-center lg:justify-start">
+            
+            <!-- Pulsing Glow Behind Image -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-primary/40 to-[#ffb1c5]/50 rounded-[2.5rem] blur-[60px] opacity-60 group-hover:opacity-100 transition-opacity duration-700 animate-pulse" style="animation-duration: 5s;"></div>
+            
+            <!-- Premium Gradient Border Wrapper -->
+            <div class="relative w-full max-w-[420px] aspect-[4/5] rounded-[2.2rem] p-[2px] bg-gradient-to-br from-primary/30 via-white/10 to-primary-container/40 transform -rotate-2 group-hover:rotate-0 group-hover:scale-[1.02] transition-all duration-700 ease-out shadow-[0_20px_50px_rgba(171,44,93,0.15)]">
+                
+                <!-- Inner Image Mask -->
+                <div class="w-full h-full rounded-[2rem] overflow-hidden bg-white">
+                    <img src="./assets/about-image.webp" alt="CalmlyUnique Web3 Presence" class="w-full h-full object-cover shadow-inner transform group-hover:scale-105 transition-transform duration-1000 ease-out" loading="lazy" />
+                </div>
+                
+                <!-- Cool Spinning Circular Badge (Enhanced Shadow) -->
+                <div class="absolute -bottom-6 -right-6 sm:-bottom-8 sm:-right-8 w-24 h-24 sm:w-32 sm:h-32 bg-white/90 backdrop-blur-md rounded-full shadow-[0_15px_35px_rgba(240,98,146,0.25)] border border-white flex items-center justify-center z-20 group-hover:scale-110 group-hover:-translate-y-2 transition-transform duration-500">
+                    <div class="absolute w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary to-[#ff8fa3] rounded-full flex items-center justify-center text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.4),0_4px_10px_rgba(171,44,93,0.3)]">
+                        <span class="material-symbols-outlined text-[20px] sm:text-[24px]">verified</span>
+                    </div>
+                    <svg viewBox="0 0 100 100" class="w-full h-full animate-[spin_10s_linear_infinite]">
+                        <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none"></path>
+                        <text font-size="10.5" font-family="monospace" font-weight="bold" fill="#ab2c5d" letter-spacing="2">
+                            <textPath href="#textPath" startOffset="0%">• WEB3 COMMUNITY • DIGITAL PRESENCE</textPath>
+                        </text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: Typography & Copy -->
+        <div class="w-full lg:w-1/2 text-center lg:text-left z-10 flex flex-col items-center lg:items-start">
+            
+            <!-- Pre-headline (Scroll Reveal) -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-100 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/20 font-mono text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-6 shadow-sm">
+                <span class="material-symbols-outlined text-[14px]">fingerprint</span>
+                BEHIND THE AVATAR
+            </div>
+            
+            <!-- Massive Headline (Scroll Reveal) -->
+            <h2 class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-200 font-serif text-[38px] sm:text-[46px] lg:text-[52px] font-bold text-on-surface leading-[1.1] tracking-tight mb-8">
+                I help real people build <br class="hidden lg:block" />
+                <span class="relative inline-block">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] relative z-10">real progress.</span>
+                    <span class="absolute bottom-2 left-0 w-full h-[12px] bg-primary-container/30 -z-0 rounded-sm"></span>
+                </span>
+            </h2>
+
+            <!-- Body Copy (Scroll Reveal) -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-300 space-y-6 font-body-lg text-[15.5px] sm:text-[17px] leading-[1.8] text-on-surface-variant max-w-[550px]">
+                <p>
+                    Known for my warm, motivational style and community-focused energy, my goal is to curate thoughts and build 
+                    <strong class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">lasting influence in Web3.</strong>
+                </p>
+                <p>
+                    I host insightful conversations, create engaging content, and share actionable advice on 
+                    <strong class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">creator growth and discipline.</strong>
+                </p>
+                <p>
+                    Whether we’re experimenting with AI-powered visuals or reminding each other to lock in on big goals, my mission is simple: turning audiences into genuine communities—one authentic connection at a time.
+                </p>
+            </div>
+
+            <!-- Mini Skill Glass Pills (Scroll Reveal) -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-500 mt-10 flex flex-wrap justify-center lg:justify-start gap-3">
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-outline-variant/40 shadow-[0_4px_15px_rgba(0,0,0,0.03)] backdrop-blur-sm hover:border-primary/40 hover:-translate-y-0.5 transition-all cursor-default">
+                    <span class="material-symbols-outlined text-[16px] text-primary">graphic_eq</span>
+                    <span class="font-mono text-[10px] font-bold tracking-widest text-on-surface uppercase">Live Audio Hosting</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-outline-variant/40 shadow-[0_4px_15px_rgba(0,0,0,0.03)] backdrop-blur-sm hover:border-primary/40 hover:-translate-y-0.5 transition-all cursor-default">
+                    <span class="material-symbols-outlined text-[16px] text-primary">auto_awesome</span>
+                    <span class="font-mono text-[10px] font-bold tracking-widest text-on-surface uppercase">AI Visuals</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-outline-variant/40 shadow-[0_4px_15px_rgba(0,0,0,0.03)] backdrop-blur-sm hover:border-primary/40 hover:-translate-y-0.5 transition-all cursor-default">
+                    <span class="material-symbols-outlined text-[16px] text-primary">hub</span>
+                    <span class="font-mono text-[10px] font-bold tracking-widest text-on-surface uppercase">Community SMM</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- THE TRACK RECORD: 4 Premium Animated Stat Cards -->
+    <div class="max-w-[1200px] mx-auto mt-24 lg:mt-32 relative z-10 w-full">
+        
+        <!-- Section Title (Scroll Reveal) -->
+        <div class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out text-center mb-12">
+            <div class="inline-flex items-center gap-2 font-mono text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-3">
+                <span class="w-8 h-[1px] bg-gradient-to-r from-transparent to-primary"></span>
+                PROVEN IMPACT
+                <span class="w-8 h-[1px] bg-gradient-to-l from-transparent to-primary"></span>
+            </div>
+            <h3 class="font-serif text-[28px] sm:text-[36px] font-bold text-on-surface">By the Numbers</h3>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            
+            <!-- Card 1: X Monetization -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out bg-white/60 backdrop-blur-xl border border-outline-variant/30 rounded-[2rem] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/30 hover:-translate-y-2 transition-all relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary-container/30 rounded-full blur-2xl group-hover:bg-primary-container/60 group-hover:scale-150 transition-all duration-700"></div>
+                <div class="mb-5 relative z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/10 to-transparent flex items-center justify-center text-primary border border-primary/10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[24px]">payments</span>
+                    </div>
+                </div>
+                <div class="mb-2 relative z-10 flex items-baseline">
+                    <span class="font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm">$</span>
+                    <span class="count-up font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm" data-target="5800">0</span>
+                    <span class="font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm">+</span>
+                </div>
+                <h4 class="font-bold text-[13px] sm:text-[15px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">X Creator Payout</h4>
+                <p class="font-body-md text-[12px] sm:text-[14px] text-on-surface-variant leading-relaxed relative z-10">Generated in a single payout, proving sustainable content monetization.</p>
+            </div>
+
+            <!-- Card 2: Community Growth -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out delay-100 bg-white/60 backdrop-blur-xl border border-outline-variant/30 rounded-[2rem] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/30 hover:-translate-y-2 transition-all relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-tertiary-fixed/40 rounded-full blur-2xl group-hover:bg-tertiary-fixed/70 group-hover:scale-150 transition-all duration-700"></div>
+                <div class="mb-5 relative z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-tertiary-fixed/30 to-transparent flex items-center justify-center text-primary border border-tertiary/10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[24px]">group_add</span>
+                    </div>
+                </div>
+                <div class="mb-2 relative z-10 flex items-baseline">
+                    <span class="count-up font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm" data-target="5600">0</span>
+                    <span class="font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm">+</span>
+                </div>
+                <h4 class="font-bold text-[13px] sm:text-[15px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">Followers</h4>
+                <p class="font-body-md text-[12px] sm:text-[14px] text-on-surface-variant leading-relaxed relative z-10">Engaged Web3 community with top posts crossing 10K+ high-interaction views.</p>
+            </div>
+
+            <!-- Card 3: Content Strategy -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out delay-200 bg-white/60 backdrop-blur-xl border border-outline-variant/30 rounded-[2rem] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/30 hover:-translate-y-2 transition-all relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary-fixed/60 rounded-full blur-2xl group-hover:bg-primary-fixed/90 group-hover:scale-150 transition-all duration-700"></div>
+                <div class="mb-5 relative z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-fixed/50 to-transparent flex items-center justify-center text-primary border border-primary/10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[24px]">trending_up</span>
+                    </div>
+                </div>
+                <div class="mb-2 relative z-10 flex items-baseline">
+                    <span class="count-up font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm" data-target="15">0</span>
+                    <span class="font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm">%</span>
+                </div>
+                <h4 class="font-bold text-[13px] sm:text-[15px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">Engagement Rate</h4>
+                <p class="font-body-md text-[12px] sm:text-[14px] text-on-surface-variant leading-relaxed relative z-10">Consistent 8-15% ER using strategic storytelling and AI visual tools.</p>
+            </div>
+
+            <!-- Card 4: Execution -->
+            <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out delay-300 bg-white/60 backdrop-blur-xl border border-outline-variant/30 rounded-[2rem] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/30 hover:-translate-y-2 transition-all relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-24 h-24 bg-[#ffb1c5]/40 rounded-full blur-2xl group-hover:bg-[#ffb1c5]/70 group-hover:scale-150 transition-all duration-700"></div>
+                <div class="mb-5 relative z-10">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#ffb1c5]/30 to-transparent flex items-center justify-center text-primary border border-primary/10 group-hover:scale-110 transition-transform duration-500">
+                        <span class="material-symbols-outlined text-[24px]">rocket_launch</span>
+                    </div>
+                </div>
+                <div class="mb-2 relative z-10 flex items-baseline">
+                    <span class="font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm">$</span>
+                    <span class="count-up font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm" data-target="6500">0</span>
+                    <span class="font-serif text-[32px] sm:text-[42px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] drop-shadow-sm">+</span>
+                </div>
+                <h4 class="font-bold text-[13px] sm:text-[15px] text-on-surface uppercase tracking-wide leading-tight mb-2 relative z-10">On-Chain Wins</h4>
+                <p class="font-body-md text-[12px] sm:text-[14px] text-on-surface-variant leading-relaxed relative z-10">Combined crypto earnings in a single month during a 9-5 discipline lock-in.</p>
+            </div>
+
+        </div>
+    </div>
+
+</section>
 <!-- SERVICES SECTION (7-Grid Bento Layout) -->
         <section class="py-24 px-6 md:px-12 max-w-[1200px] mx-auto relative z-10" id="services">
             
@@ -776,47 +934,318 @@
 
         </section>
 
-        <section class="py-xl px-gutter relative z-10 text-center mb-lg">
-            <div class="max-w-3xl mx-auto glass-card p-xl rounded-[40px] relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-container/10"></div>
-                <h2 class="font-h1 text-h1 text-on-surface mb-6 relative z-10">
-                    Let’s build something meaningful together.
+        <!-- ========================================= -->
+        <!-- EXPERIENCE & JOURNEY TIMELINE SECTION     -->
+        <!-- ========================================= -->
+        <section id="experience" class="relative w-full pt-24 pb-32 px-6 md:px-12 z-20 overflow-hidden">
+            
+            <!-- Ambient Background Glows -->
+            <div class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-primary-container/20 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+            <div class="absolute bottom-[10%] right-[-10%] w-[600px] h-[600px] bg-tertiary-fixed/20 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+            <!-- Section Header -->
+            <div class="max-w-[1200px] mx-auto text-center mb-20 relative z-10">
+                <div class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out inline-flex items-center gap-2 font-mono text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-4">
+                    <span class="w-8 h-[1px] bg-gradient-to-r from-transparent to-primary"></span>
+                    THE JOURNEY
+                    <span class="w-8 h-[1px] bg-gradient-to-l from-transparent to-primary"></span>
+                </div>
+                <h2 class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-100 font-serif text-[36px] sm:text-[48px] font-bold text-on-surface leading-tight">
+                    Professional Experience
                 </h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant mb-10 relative z-10">
-                    Ready to elevate your Web3 presence?
+                <p class="reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-200 mt-4 font-body-lg text-[15px] sm:text-[17px] text-on-surface-variant max-w-[600px] mx-auto">
+                    Bridging the gap between the structured discipline of a 9-5 and the limitless scaling potential of the Web3 ecosystem.
                 </p>
-                <button
-                    class="relative z-10 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-sm text-label-sm uppercase px-12 py-5 rounded-full shadow-[0_4px_20px_rgba(240,98,146,0.3)] hover:shadow-[0_8px_30px_rgba(240,98,146,0.5)] transition-all duration-300 transform hover:-translate-y-1">
-                    Let’s Work Together
-                </button>
+            </div>
+
+            <!-- TIMELINE CONTAINER -->
+            <div class="relative max-w-[1000px] mx-auto">
+                
+                <!-- Center Glowing Line (Hidden on very small screens, aligns left on mobile, center on desktop) -->
+                <div class="absolute left-[34px] md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary via-[#ffb1c5] to-transparent md:-translate-x-1/2 z-0 opacity-40"></div>
+
+                <!-- TIMELINE ITEM 1: ARMChain Ambassador -->
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center w-full mb-12 sm:mb-20 group">
+                    <!-- Left Space (Desktop) -->
+                    <div class="hidden md:block w-5/12"></div>
+                    
+                    <!-- Center Node -->
+                    <div class="absolute left-[24px] md:left-1/2 w-[22px] h-[22px] rounded-full bg-surface border-[4px] border-primary md:-translate-x-1/2 z-20 shadow-[0_0_15px_rgba(171,44,93,0.5)] group-hover:scale-125 transition-transform duration-500">
+                        <div class="absolute inset-0 rounded-full bg-primary animate-ping opacity-40"></div>
+                    </div>
+
+                    <!-- Card Content (Right Side) -->
+                    <div class="w-full pl-[70px] md:pl-0 md:w-5/12">
+                        <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out bg-white/60 backdrop-blur-xl border border-outline-variant/30 p-6 sm:p-8 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/40 transition-all duration-500 group-hover:-translate-y-2">
+                            <span class="inline-block px-3 py-1 mb-4 rounded-full bg-primary/10 text-primary font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border border-primary/20">Cohort 2 • Mar 2026 - Present</span>
+                            <h3 class="font-serif text-[20px] sm:text-[24px] font-bold text-on-surface mb-2">Official ARMChain Ambassador</h3>
+                            <p class="font-body-md text-[13px] sm:text-[14px] text-on-surface-variant leading-relaxed">
+                                Secured the "Golden Ticket" into the ARMChain ecosystem. Tasked with driving community growth, onboarding, and project awareness. Serving as a crucial bridge between the core dev team and the public community.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIMELINE ITEM 2: Content Specialist & Bounties (Alternates to Left on Desktop) -->
+                <div class="relative z-10 flex flex-col md:flex-row-reverse justify-between items-start md:items-center w-full mb-12 sm:mb-20 group">
+                    <div class="hidden md:block w-5/12"></div>
+                    
+                    <div class="absolute left-[24px] md:left-1/2 w-[22px] h-[22px] rounded-full bg-surface border-[4px] border-[#ff8fa3] md:-translate-x-1/2 z-20 shadow-[0_0_15px_rgba(255,143,163,0.5)] group-hover:scale-125 transition-transform duration-500"></div>
+
+                    <!-- Card Content (Left Side Desktop, Right Side Mobile) -->
+                    <div class="w-full pl-[70px] md:pl-0 md:w-5/12 md:text-right">
+                        <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out delay-100 bg-white/60 backdrop-blur-xl border border-outline-variant/30 p-6 sm:p-8 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/40 transition-all duration-500 group-hover:-translate-y-2">
+                            <span class="inline-block px-3 py-1 mb-4 rounded-full bg-secondary-container/50 text-primary font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border border-outline-variant/40">Freelance • SMM</span>
+                            <h3 class="font-serif text-[20px] sm:text-[24px] font-bold text-on-surface mb-2">Web3 Content Specialist</h3>
+                            <p class="font-body-md text-[13px] sm:text-[14px] text-on-surface-variant leading-relaxed">
+                                Crafting high-converting educational threads, vlogs, and scaling strategies for emerging projects. Consistent winner of bounties on <strong class="text-primary">Superteam Earn</strong>, executing OG images, threads, and space promotions for Solana projects like Levva_fi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIMELINE ITEM 3: Space Host & X Monetization -->
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center w-full mb-12 sm:mb-20 group">
+                    <div class="hidden md:block w-5/12"></div>
+                    
+                    <div class="absolute left-[24px] md:left-1/2 w-[22px] h-[22px] rounded-full bg-surface border-[4px] border-primary md:-translate-x-1/2 z-20 shadow-[0_0_15px_rgba(171,44,93,0.5)] group-hover:scale-125 transition-transform duration-500"></div>
+
+                    <div class="w-full pl-[70px] md:pl-0 md:w-5/12">
+                        <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out delay-200 bg-white/60 backdrop-blur-xl border border-outline-variant/30 p-6 sm:p-8 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/40 transition-all duration-500 group-hover:-translate-y-2">
+                            <span class="inline-block px-3 py-1 mb-4 rounded-full bg-primary/10 text-primary font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border border-primary/20">Community Leader</span>
+                            <h3 class="font-serif text-[20px] sm:text-[24px] font-bold text-on-surface mb-2">Space Host & CT Influencer</h3>
+                            <p class="font-body-md text-[13px] sm:text-[14px] text-on-surface-variant leading-relaxed">
+                                Curating insights and hosting audio stages in the Crypto Twitter (CT) ecosystem. Focused on humanizing Web3 projects. Achieved official <strong class="text-primary">X Monetization</strong> in March 2026 by maintaining high-engagement audiences and authentic interactions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIMELINE ITEM 4: The 9-5 Balance -->
+                <div class="relative z-10 flex flex-col md:flex-row-reverse justify-between items-start md:items-center w-full group">
+                    <div class="hidden md:block w-5/12"></div>
+                    
+                    <div class="absolute left-[24px] md:left-1/2 w-[22px] h-[22px] rounded-full bg-surface border-[4px] border-[#ff8fa3] md:-translate-x-1/2 z-20 shadow-[0_0_15px_rgba(255,143,163,0.5)] group-hover:scale-125 transition-transform duration-500">
+                        <div class="absolute inset-0 rounded-full bg-[#ff8fa3] animate-ping opacity-30"></div>
+                    </div>
+
+                    <div class="w-full pl-[70px] md:pl-0 md:w-5/12 md:text-right">
+                        <div class="reveal-card opacity-0 translate-y-12 transition-all duration-700 ease-out delay-300 bg-gradient-to-br from-surface to-primary/5 backdrop-blur-xl border border-primary/20 p-6 sm:p-8 rounded-[2rem] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(240,98,146,0.15)] hover:border-primary/50 transition-all duration-500 group-hover:-translate-y-2">
+                            <span class="inline-block px-3 py-1 mb-4 rounded-full bg-white/80 text-primary font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest shadow-sm">Daily Grind</span>
+                            <h3 class="font-serif text-[20px] sm:text-[24px] font-bold text-on-surface mb-2">The 9-5 & Web3 Balance</h3>
+                            <p class="font-body-md text-[13px] sm:text-[14px] text-on-surface-variant leading-relaxed">
+                                Proving that success doesn't require quitting your day job. Balancing a demanding traditional 9-5 with rigorous Web3 building. Currently executing a highly publicized <strong class="text-primary">3-month self-discipline lock-in</strong>, inspiring others to stay accountable.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+<!-- ========================================= -->
+        <!-- DYNAMIC CONTACT SECTION (Mobile Optimized)-->
+        <!-- ========================================= -->
+        <section id="contact" class="py-20 sm:py-24 px-4 sm:px-6 md:px-12 relative z-20 w-full overflow-hidden">
+            
+            <!-- Ambient Background Glows -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[800px] h-[600px] sm:h-[800px] bg-gradient-to-tr from-primary/10 to-[#ffb1c5]/20 rounded-full blur-[100px] sm:blur-[120px] pointer-events-none -z-10 animate-pulse" style="animation-duration: 6s;"></div>
+
+            <div class="max-w-[1100px] mx-auto reveal-card opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+                
+                <!-- Main Glass Container (Tightened padding on mobile) -->
+                <div class="relative bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] sm:rounded-[3rem] p-6 sm:p-10 md:p-14 lg:p-20 shadow-[0_20px_60px_rgba(171,44,93,0.08)] overflow-hidden">
+                    
+                    <!-- Inner Decorative Orbs -->
+                    <div class="absolute -right-20 -top-20 w-48 sm:w-64 h-48 sm:h-64 bg-primary-container/40 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-20 -bottom-20 w-48 sm:w-64 h-48 sm:h-64 bg-tertiary-fixed/40 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
+                        
+                        <!-- Left Side: Copy & Hook -->
+                        <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col items-center lg:items-start">
+                            
+                            <!-- Live Status Indicator -->
+                            <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-outline-variant/30 shadow-sm mb-6 sm:mb-8">
+                                <span class="relative flex h-2.5 w-2.5">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                                </span>
+                                <span class="font-mono text-[9px] sm:text-[11px] font-bold tracking-[0.15em] text-on-surface-variant uppercase pt-0.5">
+                                    Available for collabs
+                                </span>
+                            </div>
+
+                            <h2 class="font-serif text-[36px] sm:text-[48px] lg:text-[56px] font-bold text-on-surface leading-[1.1] tracking-tight mb-4 sm:mb-6">
+                                Let's build <br class="hidden sm:block" />
+                                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3]">something real.</span>
+                            </h2>
+                            
+                            <p class="font-body-md sm:font-body-lg text-[14.5px] sm:text-[17px] leading-[1.7] sm:leading-[1.8] text-on-surface-variant max-w-[450px]">
+                                Whether you need a dedicated Space host, a community strategist, or someone to lock in and scale your Web3 brand—I'm just a DM away.
+                            </p>
+                        </div>
+
+                        <!-- Right Side: Interactive Social Cards -->
+                        <div class="w-full lg:w-1/2 flex flex-col gap-4 sm:gap-5 relative">
+                            
+                            <!-- X (Twitter) Contact Card -->
+                            <a href="https://x.com/CalmlyUnique" target="_blank" rel="noopener noreferrer" class="group relative flex items-center justify-between p-4 sm:p-6 lg:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(240,98,146,0.15)] hover:border-primary/40 active:scale-[0.98] transition-all duration-300 sm:duration-500 hover:-translate-y-1.5 overflow-hidden z-10">
+                                
+                                <!-- Hover Gradient Sweep -->
+                                <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out hidden sm:block"></div>
+                                
+                                <div class="relative z-10 flex items-center gap-4 sm:gap-5">
+                                    <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 shrink-0 rounded-[1rem] sm:rounded-2xl bg-gradient-to-br from-gray-900 to-black text-white flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.2)] group-hover:scale-110 transition-transform duration-500">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg>
+                                    </div>
+                                    <div class="text-left">
+                                        <p class="font-mono text-[9px] sm:text-[11px] font-bold tracking-widest text-on-surface-variant uppercase mb-0.5 sm:mb-1">Send a DM</p>
+                                        <p class="font-serif text-[18px] sm:text-[22px] lg:text-[24px] font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">@CalmlyUnique</p>
+                                    </div>
+                                </div>
+                                <!-- Arrow embedded in a circle for mobile touch target feel -->
+                                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors shrink-0">
+                                    <span class="material-symbols-outlined text-[18px] sm:text-[24px] text-on-surface-variant/60 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300 relative z-10">east</span>
+                                </div>
+                            </a>
+
+                            <!-- Telegram Contact Card -->
+                            <a href="https://t.me/calmlyunique" target="_blank" rel="noopener noreferrer" class="group relative flex items-center justify-between p-4 sm:p-6 lg:p-8 rounded-[1.5rem] sm:rounded-[2rem] bg-white/70 backdrop-blur-xl border border-white shadow-[0_8px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(42,171,238,0.15)] hover:border-[#2AABEE]/40 active:scale-[0.98] transition-all duration-300 sm:duration-500 hover:-translate-y-1.5 overflow-hidden z-10">
+                                
+                                <!-- Hover Gradient Sweep -->
+                                <div class="absolute inset-0 bg-gradient-to-r from-[#2AABEE]/5 to-transparent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out hidden sm:block"></div>
+                                
+                                <div class="relative z-10 flex items-center gap-4 sm:gap-5">
+                                    <div class="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 shrink-0 rounded-[1rem] sm:rounded-2xl bg-gradient-to-br from-[#2AABEE] to-[#229ED9] text-white flex items-center justify-center shadow-[0_4px_10px_rgba(42,171,238,0.3)] group-hover:scale-110 transition-transform duration-500">
+                                        <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 ml-[-2px] mt-[2px]"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.06-.19-.07-.05-.16-.03-.23-.01-.1.02-1.63 1.05-4.62 3.05-.44.3-.84.45-1.2.44-.4-.01-1.14-.22-1.69-.39-.68-.22-.12-.34.33-.51 2.65-1.14 5.29-2.26 7.93-3.37.38-.16.74-.29 1.07-.29.35 0 .66.12.87.35.15.17.23.4.15.82z"/></svg>
+                                    </div>
+                                    <div class="text-left">
+                                        <p class="font-mono text-[9px] sm:text-[11px] font-bold tracking-widest text-on-surface-variant uppercase mb-0.5 sm:mb-1">Chat on TG</p>
+                                        <p class="font-serif text-[18px] sm:text-[22px] lg:text-[24px] font-bold text-on-surface group-hover:text-[#2AABEE] transition-colors leading-tight">@calmlyunique</p>
+                                    </div>
+                                </div>
+                                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#2AABEE]/5 flex items-center justify-center group-hover:bg-[#2AABEE]/10 transition-colors shrink-0">
+                                    <span class="material-symbols-outlined text-[18px] sm:text-[24px] text-on-surface-variant/60 group-hover:text-[#2AABEE] group-hover:translate-x-1 transition-all duration-300 relative z-10">east</span>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
-    <!-- Footer (Shared Component) -->
-    <footer
-        class="w-full py-12 px-8 bg-neutral-50 dark:bg-neutral-950 border-t border-pink-100 dark:border-pink-900/30 flat no shadows relative z-10">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6 max-w-7xl mx-auto">
-            <div class="text-lg font-bold text-pink-500 font-serif text-sm tracking-wide">
-                CalmlyUnique
+<!-- PREMIUM FOOTER -->
+    <footer class="relative w-full bg-white pt-20 pb-10 overflow-hidden border-t border-outline-variant/30 z-20">
+        
+        <!-- Ambient Bottom Glow -->
+        <div class="absolute bottom-[-150px] left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary-container/20 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+
+        <div class="max-w-[1200px] mx-auto px-6 md:px-12">
+            
+            <!-- Top Section: Brand & Links -->
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-start gap-10 mb-16 relative z-10">
+                
+                <!-- Brand Identity -->
+                <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                    <a href="#" class="inline-block font-serif text-[28px] sm:text-[32px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#ff8fa3] mb-3 hover:opacity-80 transition-opacity">
+                        CalmlyUnique
+                    </a>
+                    <p class="font-body-md text-[13px] sm:text-[14px] text-on-surface-variant max-w-[320px] leading-relaxed">
+                        Turning audiences into decentralized communities through authentic engagement and intentional content.
+                    </p>
+                </div>
+
+<!-- Footer Interactive Elements -->
+                <div class="flex items-center gap-3 sm:gap-4 mt-6 md:mt-0">
+                    
+                    <!-- Web3 Status Badge (Hidden on very small mobile to save space) -->
+                    <div class="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/50 backdrop-blur-md border border-outline-variant/30 shadow-sm cursor-default hover:border-primary/30 transition-colors group">
+                        <span class="material-symbols-outlined text-[16px] text-primary group-hover:animate-spin">public</span>
+                        <span class="font-mono text-[9px] font-bold tracking-[0.15em] text-on-surface-variant uppercase pt-0.5">Building On-Chain</span>
+                    </div>
+
+                    <!-- Back to Top Button -->
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 rounded-full bg-white backdrop-blur-xl border border-outline-variant/40 shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:border-primary/50 hover:shadow-[0_8px_25px_rgba(240,98,146,0.25)] hover:-translate-y-1 active:scale-95 transition-all duration-300 overflow-hidden">
+                        
+                        <!-- Hover Light Sweep -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
+                        
+                        <!-- Text -->
+                        <span class="font-mono text-[9px] sm:text-[10px] font-bold tracking-widest text-on-surface-variant group-hover:text-primary uppercase transition-colors relative z-10 pl-2 sm:pl-3 pt-0.5">
+                            Scroll Top
+                        </span>
+                        
+                        <!-- Animated Up Arrow -->
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-surface border border-outline-variant/20 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-[#ff8fa3] group-hover:border-transparent text-on-surface-variant group-hover:text-white shadow-inner transition-all duration-300 relative z-10">
+                            <span class="material-symbols-outlined text-[16px] group-hover:-translate-y-0.5 transition-transform duration-300">arrow_upward</span>
+                        </div>
+                        
+                    </button>
+                    
+                </div>
             </div>
-            <div class="flex gap-6">
-                <a class="text-pink-500 font-bold hover:opacity-80 transition-opacity cursor-pointer font-serif text-sm tracking-wide"
-                    href="#">Twitter</a>
-                <a class="text-neutral-400 dark:text-neutral-500 hover:text-pink-400 hover:opacity-80 transition-opacity cursor-pointer font-serif text-sm tracking-wide"
-                    href="#">Mirror</a>
-                <a class="text-neutral-400 dark:text-neutral-500 hover:text-pink-400 hover:opacity-80 transition-opacity cursor-pointer font-serif text-sm tracking-wide"
-                    href="#">LinkedIn</a>
-            </div>
-            <div class="font-serif text-sm tracking-wide text-pink-400 dark:text-pink-300">
-                © 2024 CalmlyUnique. Created with intention for the Web3 space.
+
+            <!-- Fade Divider -->
+            <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-outline-variant/40 to-transparent mb-8"></div>
+
+            <!-- Bottom Section: Copyright & Developer Signature -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left relative z-10">
+                
+                <p class="font-mono text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-on-surface-variant/70">
+                    © 2026 CalmlyUnique. All rights reserved.
+                </p>
+                
+                <!-- Alpha Sketcher Signature with hover fill effect -->
+                <p class="flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-on-surface-variant/80">
+                    Made with <span class="text-[#ff8fa3] text-[14px] animate-pulse">❤</span> by 
+                    
+                    <!-- UPDATE YOUR X LINK HERE inside the href="" -->
+                    <a href="https://x.com/AlphaSketcher" target="_blank" rel="noopener noreferrer" class="relative inline-flex items-center text-primary group overflow-hidden px-1.5 py-0.5 rounded-sm ml-0.5">
+                        <span class="relative z-10 transition-colors duration-300 group-hover:text-white">Alpha Sketcher</span>
+                        <span class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary to-[#ff8fa3] transition-all duration-300 group-hover:h-full -z-0"></span>
+                    </a>
+                </p>
+
             </div>
         </div>
     </footer>
 </body>
 
 <!-- Interactive Scripts -->
-<!-- Interactive Scripts -->
 <script>
+// =========================================
+    // PRELOADER & HERO REVEAL LOGIC
+    // =========================================
+    window.addEventListener('load', function() {
+        const preloader = document.getElementById('preloader');
+        const body = document.getElementById('main-body');
+
+        // Wait 2.2 seconds for the preloader animation to finish
+        setTimeout(() => {
+            // 1. Trigger the cinematic zoom & fade out of the preloader
+            preloader.classList.add('preloader-hidden');
+            
+            // 2. Unlock page scrolling
+            body.classList.remove('loading-locked');
+            
+            // 3. Trigger the Hero Staggered Reveal 
+            // (Fires right as the preloader fades away for a smooth transition)
+            setTimeout(() => {
+                document.querySelectorAll('.hero-element').forEach(el => {
+                    el.classList.add('revealed');
+                });
+            }, 100);
+
+            // 4. Completely remove preloader from DOM after transition finishes
+            setTimeout(() => {
+                preloader.remove();
+            }, 800); 
+            
+        }, 2200); 
+    });
+
     // 1. Navbar Scroll Effect (Deepens shadow and shrinks slightly on scroll)
     window.addEventListener('scroll', function() {
         const navbar = document.getElementById('dynamic-navbar');
@@ -913,54 +1342,63 @@
         setTimeout(type, 1000);
     });
 
-    // 4. Scroll Reveal & Number Counter Logic
+// 4. Scroll Reveal & Number Counter Logic
     document.addEventListener("DOMContentLoaded", () => {
         const revealCards = document.querySelectorAll(".reveal-card");
         const counters = document.querySelectorAll(".count-up");
-        let hasCounted = false; // Prevents numbers from recounting
 
-        // Function to animate numbers
-        function startCounters() {
-            if (hasCounted) return;
-            hasCounted = true;
-
-            counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                const duration = 2000; // 2 seconds counting animation
-                const increment = target / (duration / 16); // 60fps
-                
-                let current = 0;
-                
-                const updateCounter = () => {
-                    current += increment;
-                    if (current < target) {
-                        // Format with commas
-                        counter.innerText = Math.ceil(current).toLocaleString();
-                        requestAnimationFrame(updateCounter);
-                    } else {
-                        counter.innerText = target.toLocaleString();
-                    }
-                };
-                updateCounter();
-            });
-        }
-
-        // Observer to detect when cards are scrolled into view
-        const observer = new IntersectionObserver((entries) => {
+        // --- OBSERVER 1: General Scroll Reveal for Cards ---
+        const revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     // Slide up and fade in the card
                     entry.target.classList.remove('opacity-0', 'translate-y-12');
                     entry.target.classList.add('opacity-100', 'translate-y-0');
                     
-                    // Trigger the counter animation
-                    startCounters();
+                    // Unobserve after revealing so it doesn't trigger again
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.2 }); // Triggers when 20% of the card is visible
+        }, { threshold: 0.15 }); // Triggers when 15% of the element is visible
 
-        // Attach observer to each card
-        revealCards.forEach(card => observer.observe(card));
+        revealCards.forEach(card => revealObserver.observe(card));
+
+
+        // --- OBSERVER 2: Dedicated Number Counter Observer ---
+        // This ensures the numbers ONLY count up when they are actually on the screen
+        const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    
+                    // Configuration for counting speed
+                    const duration = 2500; // 2.5 seconds to finish counting
+                    const increment = target / (duration / 16); // 60fps calculation
+                    
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            // Format with commas (e.g., 5,800)
+                            counter.innerText = Math.ceil(current).toLocaleString();
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            // Final exact number
+                            counter.innerText = target.toLocaleString();
+                        }
+                    };
+                    
+                    updateCounter();
+                    
+                    // Stop observing once the counting starts so it doesn't repeat
+                    observer.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 }); // Triggers when 50% of the number itself is visible
+
+        counters.forEach(counter => counterObserver.observe(counter));
     });
 </script>
 
